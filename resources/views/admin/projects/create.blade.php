@@ -32,6 +32,20 @@
                 </select>
             </div>
             <div class="mb-3">
+                <div>
+                    <label class="form-label">Technology</label>
+                </div>
+    
+                @foreach ($technologies as $technology)
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" value="{{ $technology->id }}" name="technologies[]"
+                            id="technology-{{ $technology->id }}" {{ in_array($technology->id, old('technologies', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="technology-{{ $technology->id }}">{{ $technology->title }}</label>
+                    </div>
+                @endforeach
+    
+            </div>
+            <div class="mb-3">
                 <label for="project_image" class="form-label fw-bold">Project Image</label>
                 <input class="form-control  @error('project_image') is-invalid @enderror" type="file" id="project_image" name="project_image">
             </div>

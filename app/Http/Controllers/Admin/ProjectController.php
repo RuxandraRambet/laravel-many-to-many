@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -28,7 +29,8 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
-        return view('admin.projects.create', compact('types'));
+        $technologies = Technology::all();
+        return view('admin.projects.create', compact('types', 'technologies'));
     }
 
     /**
@@ -47,7 +49,11 @@ class ProjectController extends Controller
             $project->project_image = Storage::put('uploads', $data['project_image']);
         }
 
-        $project->save();
+        $project->save(); //dopo il save abbiamo l'id del project
+
+        if (isset($data['technologies'])) {
+            $project->technologies()->sync($data['technologies']);
+        }
 
         return redirect()->route('admin.projects.index')->with('message', "Project  $project->title created successfully!");
     }
@@ -57,7 +63,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-       return view('admin.projects.show', compact('project'));
+        return view('admin.projects.show', compact('project'));
     }
 
     /**
@@ -66,7 +72,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -78,6 +85,13 @@ class ProjectController extends Controller
         $project->slug = Str::of($project['title'])->slug('-');
         $project->update($data);
 
+
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($data['technologies']);
+        } else {
+            $project->technologies()->sync([]);
+        }
+
         return redirect()->route('admin.projects.index')->with('message', "Project  $project->title updated correctly!");
     }
 
@@ -86,6 +100,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $project->technologies()->sync([]);
+
         if ($project->project_image) {
             Storage::delete($project->project_image);
         }

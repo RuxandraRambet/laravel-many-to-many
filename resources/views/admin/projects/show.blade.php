@@ -14,9 +14,22 @@
                     </div>
                 @endif
                 <div class="my-3">
-                    <strong>Type:</strong> {{ $project->type?->title }}
+                    <h6><strong>Type:</strong> {{ $project->type?->title ?: 'No category' }}</h6>
                 </div>
-                <a href="{{ route('admin.projects.index') }}" class="btn btn-primary">Go back to projects list</a>
+
+                <div>
+                    <h6 class="fw-bold">Technology:</h6>
+                    <ul class="list-unstyled">
+                        @foreach ($project->technologies as $technology)
+                            <li> {{ $technology->title }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="p-3">
+                    <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-primary mx-2">Edit</a>
+                    <a href="{{ route('admin.projects.index') }}" class="btn btn-success">Go back to projects</a>
+                </div>
+
             </div>
         </div>
 

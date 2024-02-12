@@ -9,7 +9,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['slug', 'project_image'];
+    protected $guarded = ['slug', 'project_image', 'technologies'];
 
     public function type()
     {

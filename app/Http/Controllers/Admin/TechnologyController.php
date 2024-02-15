@@ -79,7 +79,7 @@ class TechnologyController extends Controller
         $technology->projects()->detach();
         $technology->delete();
 
-        return redirect()->route('admin.technologies.index')->with('message', "Technology  $technology->title deleted successfuly!");;
+        return redirect()->route('admin.technologies.index')->with('message', "Technology  $technology->title deleted successfuly!");
 
     }
 }
